@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Suarez Prince Robet</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Custom cursor */
+        body {
+            cursor: none;
+        }
+
+        .cursor {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #00ff88;
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9999;
+            transition: all 0.1s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        .cursor-follower {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 50%;
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transition: all 0.3s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 1000;
+            display: flex;
+            gap: 1rem;
+        }
+
+        nav a {
+            color: #666;
+            text-decoration: none;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+        }
+
+        nav a:hover {
+            color: #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+        header {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        header .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* Profile Image */
+        .profile-image-container {
+            position: relative;
+            z-index: 2;
+            animation: floatUpDown 3s ease-in-out infinite;
+            margin-bottom: 2rem;
+        }
+
+        .profile-image {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #00ff88;
+            box-shadow: 0 0 40px rgba(0, 255, 136, 0.4);
+            position: relative;
+        }
+
+        /* Lightning effect around image */
+        .lightning-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 320px;
+            height: 320px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            background: linear-gradient(45deg, #00ff88, #00d4ff, #00ff88);
+            background-size: 200% 200%;
+            animation: lightning 2s linear infinite, rotate 4s linear infinite;
+            opacity: 0.6;
+        }
+
+        .lightning-ring::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: #0a0a0a;
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        @keyframes floatUpDown {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        @keyframes lightning {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(0, 255, 136, 0.5),
+                            0 0 40px rgba(0, 255, 136, 0.3),
+                            inset 0 0 20px rgba(0, 255, 136, 0.2);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(0, 255, 136, 0.8),
+                            0 0 80px rgba(0, 255, 136, 0.5),
+                            inset 0 0 40px rgba(0, 255, 136, 0.4);
+            }
+        }
+
+        @keyframes rotate {
+            from {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        /* Animated background particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #00ff88;
+            border-radius: 50%;
+            opacity: 0;
+            animation: float 6s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { 
+                opacity: 0;
+                transform: translateY(0) translateX(0);
+            }
+            50% { 
+                opacity: 0.3;
+            }
+        }
+
+        .name {
+            font-size: 4rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #00ff88, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 1s ease-out;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            color: #888;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-weight: 300;
+            animation: fadeInUp 1s ease-out 0.2s both;
+            position: relative;
+            z-index: 1;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #555;
+            font-size: 0.9rem;
+            animation: bounce 2s infinite;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        section {
+            padding: 6rem 0;
+            border-top: 1px solid #222;
+            position: relative;
+            z-index: 1;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 3rem;
+            color: #fff;
+            position: relative;
+            display: inline-block;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #00ff88, #00d4ff);
+            transition: width 0.6s ease;
+        }
+
+        section.visible h2::after {
+            width: 100%;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: start;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .about-grid.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .about-text p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            color: #aaa;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 2rem;
+            background: #111;
+            border: 1px solid #222;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .stat-item:hover::before {
+            left: 100%;
+        }
+
+        .stat-item:hover {
+            border-color: #00ff88;
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            color: #00ff88;
+            font-weight: 300;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .expertise-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .expertise-list.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .expertise-list li {
+            padding: 1.5rem;
+            background: #111;
+            border-left: 3px solid #00ff88;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .expertise-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 0;
+            background: linear-gradient(180deg, #00ff88, #00d4ff);
+            transition: height 0.3s;
+        }
+
+        .expertise-list li:hover::before {
+            height: 100%;
+        }
+
+        .expertise-list li:hover {
+            background: #151515;
+            padding-left: 2rem;
+        }
+
+        .work-grid {
+            display: grid;
+            gap: 1px;
+            background: #222;
+            margin-top: 3rem;
+        }
+
+        .work-item {
+            background: #0a0a0a;
+            padding: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+
+        .work-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .work-item::after {
+            content: '→';
+            position: absolute;
+            right: 3rem;
+            opacity: 0;
+            transition: all 0.3s;
+            color: #00ff88;
+            font-size: 2rem;
+        }
+
+        .work-item:hover {
+            background: #111;
+            padding-left: 4rem;
+        }
+
+        .work-item:hover::after {
+            opacity: 1;
+            right: 2rem;
+        }
+
+        .work-info h3 {
+            font-size: 1.8rem;
+            font-weight: 300;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .work-item:hover .work-info h3 {
+            color: #00ff88;
+        }
+
+        .work-info p {
+            color: #666;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .work-year {
+            font-size: 3rem;
+            color: #222;
+            font-weight: 300;
+            transition: all 0.3s;
+        }
+
+        .work-item:hover .work-year {
+            color: #333;
+            transform: scale(1.1);
+        }
+
+        .contact-content {
+            text-align: center;
+            padding: 4rem 0;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .contact-content.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .contact-content h2 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .contact-email {
+            font-size: 2rem;
+            color: #00ff88;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 3rem;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .contact-email::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: #00ff88;
+            transition: all 0.3s;
+            transform: translateX(-50%);
+        }
+
+        .contact-email:hover::after {
+            width: 100%;
+        }
+
+        .contact-email:hover {
+            letter-spacing: 2px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .social-links a {
+            color: #666;
+            text-decoration: none;
+            font-size: 2rem;
+            transition: all 0.3s;
+            padding: 1rem;
+            border: 2px solid #222;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-links a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 255, 136, 0.1);
+            transition: left 0.3s;
+        }
+
+        .social-links a:hover::before {
+            left: 0;
+        }
+
+        .social-links a:hover {
+            color: #00ff88;
+            border-color: #00ff88;
+            transform: translateY(-5px);
+        }
+
+        .social-links a svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            color: #444;
+            font-size: 0.9rem;
+            border-top: 1px solid #222;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                cursor: default;
+            }
+
+            .cursor, .cursor-follower {
+                display: none;
+            }
+
+            nav {
+                position: static;
+                justify-content: center;
+                padding: 1rem 0;
+            }
+
+            .name {
+                font-size: 2.5rem;
+            }
+
+            .tagline {
+                font-size: 1.2rem;
+            }
+
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .expertise-list {
+                grid-template-columns: 1fr;
+            }
+
+            .work-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .work-item::after {
+                display: none;
+            }
+
+            .contact-email {
+                font-size: 1.5rem;
+            }
+
+            .profile-image-container {
+                position: static;
+                transform: none;
+                margin: 2rem auto;
+                text-align: center;
+            }
+
+            .profile-image {
+                width: 200px;
+                height: 200px;
+            }
+
+            .lightning-ring {
+                width: 220px;
+                height: 220px;
+            }
+
+            @keyframes floatUpDown {
+                0%, 100% {
+                    transform: translateY(0px);
+                }
+                50% {
+                    transform: translateY(-15px);
+                }
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+    <div class="particles" id="particles"></div>
+
+    <nav>
+        <a href="#about">About</a>
+        <a href="#expertise">Expertise</a>
+        <a href="#work">Work</a>
+        <a href="#contact">Contact</a>
+    </nav>
+
+    <header>
+        <div class="container">
+            <div class="profile-image-container">
+                <div class="lightning-ring"></div>
+                <img src="images/myprofilephoto.jpg" alt="Profile Picture" class="profile-image">
+            </div>
+            <h1 class="name">Suarez Prince Robet</h1>
+            <p class="tagline">Creative Developer & Digital Craftsperson</p>
+        </div>
+        <div class="scroll-indicator">↓ Scroll</div>
+    </header>
+
+    <main class="container">
+        <section id="about">
+            <h2>About</h2>
+            <div class="about-grid">
+                <div class="about-text">
+                    <p>I craft digital experiences that blend aesthetics with functionality. With over five years in the industry, I've helped brands tell their stories through elegant design and clean code.</p>
+                    <p>My approach is simple: listen, create, iterate. Every project is an opportunity to push boundaries and deliver something exceptional.</p>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-number">50+</div>
+                        <div class="stat-label">Projects</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">30+</div>
+                        <div class="stat-label">Clients</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">5+</div>
+                        <div class="stat-label">Years</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="expertise">
+            <h2>Expertise</h2>
+            <ul class="expertise-list">
+                <li>Full-Stack Web Development</li>
+                <li>User Interface Design</li>
+                <li>User Experience Strategy</li>
+                <li>Brand Identity</li>
+                <li>Motion Graphics</li>
+                <li>Performance Optimization</li>
+            </ul>
+        </section>
+
+        <section id="work">
+            <h2>Selected Work</h2>
+            <div class="work-grid">
+                <div class="work-item">
+                    <div class="work-info">
+                        <h3>E-Commerce Platform Redesign</h3>
+                        <p>Complete overhaul of checkout experience — 40% increase in conversions</p>
+                    </div>
+                    <div class="work-year">2024</div>
+                </div>
+                <div class="work-item">
+                    <div class="work-info">
+                        <h3>SaaS Dashboard Application</h3>
+                        <p>Real-time analytics platform serving 10k+ daily active users</p>
+                    </div>
+                    <div class="work-year">2023</div>
+                </div>
+                <div class="work-item">
+                    <div class="work-info">
+                        <h3>Brand Website & Identity</h3>
+                        <p>Full branding and web presence for sustainable fashion startup</p>
+                    </div>
+                    <div class="work-year">2023</div>
+                </div>
+                <div class="work-item">
+                    <div class="work-info">
+                        <h3>Mobile App Development</h3>
+                        <p>Cross-platform fitness tracking app with 50k+ downloads</p>
+                    </div>
+                    <div class="work-year">2022</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <div class="contact-content">
+                <h2>Let's Work Together</h2>
+                <a href="mailto:suarezprincerobet@gmail.com" class="contact-email">suarezprincerobet@gmail.com</a>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/share/1BebVYYaSP/" aria-label="Facebook">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                        </svg>
+                    </a>
+                    <a href="https://www.instagram.com/prncrbt/" aria-label="Instagram">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                    </a>
+                    <a href="https://www.tiktok.com/@ro_bet0?_r=1&_t=ZS-91gZ6K00cnS" aria-label="TikTok">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+                        </svg>
+                    </a>
+                    <a href="https://www.youtube.com/@PrincerobetSuarez" aria-label="YouTube">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2025 Suarez Prince Robet. Designed & Developed with care.</p>
+    </footer>
+
+    <script>
+        // Custom cursor
+        const cursor = document.querySelector('.cursor');
+        const follower = document.querySelector('.cursor-follower');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            
+            setTimeout(() => {
+                follower.style.left = e.clientX + 'px';
+                follower.style.top = e.clientY + 'px';
+            }, 100);
+        });
+
+        // Particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 6 + 's';
+            particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.2,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section').forEach(section => observer.observe(section));
+        document.querySelectorAll('.about-grid, .expertise-list, .contact-content').forEach(el => observer.observe(el));
+        
+        document.querySelectorAll('.work-item').forEach((item, index) => {
+            item.style.transitionDelay = (index * 0.1) + 's';
+            observer.observe(item);
+        });
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+</body>
+</html>
